@@ -1,4 +1,4 @@
-1. Clone this project from repo
+1. Clone project from this repo by (git clone https://github.com/Kryzhanivskyi/wsy.git)
 2. Set up virtual environment by (python3 -m venv yourvenvname)
 3. Activate virtual environment by (source yourvenvname/bin/activate)
 4. Install requirements by (pip install -r requirements.txt)
