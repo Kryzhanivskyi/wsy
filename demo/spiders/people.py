@@ -2,11 +2,18 @@ import scrapy
 import datetime
 from urllib.parse import urljoin
 from demo.items import PeopleItem
+from random import randint
+from time import sleep
 
 
 class PeopleSpider(scrapy.Spider):
+    """
+    For some reason pagination at morganlewis.com/api didn't work, it showed (javascript:void(0);) that's why I
+    just added a maximum cards per one page
+    """
+
     name = 'people'
-    start_urls = ['https://www.morganlewis.com/api/custom/peoplesearch/search?keyword=&category=bb82d24a9d7a45bd938533994c4e775a&sortBy=lastname&pageNum=1&numberPerPage=5&numberPerSection=5&enforceLanguage=&languageToEnforce=&school=&position=&location=&court=&judge=&isFacetRefresh=true']
+    start_urls = ['https://www.morganlewis.com/api/custom/peoplesearch/search?keyword=&category=bb82d24a9d7a45bd938533994c4e775a&sortBy=lastname&pageNum=1&numberPerPage=10000&numberPerSection=5&enforceLanguage=&languageToEnforce=&school=&position=&location=&court=&judge=&isFacetRefresh=true']
 
     def parse(self, response):
         for person_link in response.xpath("//div[@class='c-content_team__card-info']/a/@href").extract():
@@ -14,6 +21,7 @@ class PeopleSpider(scrapy.Spider):
             yield response.follow(url, callback=self.parse_profile)
 
     def parse_profile(self, response):
+        sleep(randint(1, 3))
         item = PeopleItem()
         item['url_to_profile'] = response.url
         item['photo_url'] = response.url + response.xpath("//img[@itemprop='image']/@src").extract_first()
